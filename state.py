@@ -162,7 +162,7 @@ class State():
                         break
 
                 # action and update
-                self.updateState(
+                self.updateState()
 
     def printBoard(self):
         print(self.board)
