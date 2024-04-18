@@ -107,7 +107,7 @@ class State():
         self.boardHash = None
 
     # gives rewards to Players from the action that was just made
-    def giveReward(self, events):
+    def giveReward(self):
 
         result = self.winner()
 
@@ -124,11 +124,11 @@ class State():
     # two AI bots play against each other for training purposes
     def play(self, num_eps = 1000):
         for i in range(num_eps):
-            if i % 100 == 0
+            if i % 100 == 0:
                 print("Rounds {}".format(i))
             while not self.isEnd:
                 # player 1
-                positions = self.availablePositions()
+                positions = self.getAvailablePositions()
                 p1_action = self.p1.chooseAction(positions, self.board)
                 self.updateState(p1_action)
                 board_hash = self.getHash()
@@ -145,7 +145,7 @@ class State():
                     break
 
                 else:
-                    pos = self.availablePositions()
+                    pos = self.getAvailablePositions()
                     p2_action = self.p2.chooseAction(pos, self.board)
                     self.updateState(p2_action)
                     board_hash = self.getHash()
