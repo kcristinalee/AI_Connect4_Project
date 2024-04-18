@@ -10,7 +10,7 @@ BOARD_COLS = 8
 
 class Player():
 
-    def __init__(self, name, first):
+    def __init__(self, name):
          
         self.name = name
 
@@ -30,9 +30,6 @@ class Player():
 
         # dict to update the corresponding state -> val
         self.states_value = {}
-
-        # this is a bool saying if this player is Player 1 or not
-        self.first = first
 
     def getHash(self, board):
         return str(board.reshape(BOARD_COLS * BOARD_ROWS))
