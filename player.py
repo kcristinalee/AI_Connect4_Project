@@ -40,7 +40,29 @@ class Player():
     # takes in a list that is returned from getAvailablePositions 
     # and the board
     def chooseAction(self, actions, state):
-        action = random.choice(actions)
+
+        # exploration version
+        if random.random() < self.exp_rate:
+            action = random.choice(actions)
+            
+        else:
+            value_max = -999
+            for a in actions:
+                next_board = state.board.copy()
+
+                for row in range(BOARD_ROWS-1, -1, -1):
+                    if next_board[row][col] == 0:
+                        next_board[row][col] = a[0]
+                        break
+
+                next_hash = self.getHash(next_board)
+
+                value = 0 if self.states_value.get(next_hash) is None else self.states_value.get(next_hash)
+
+                if value > value_max:
+                    value_max = value
+                    action = a
+        
         return action
 
 
