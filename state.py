@@ -5,7 +5,7 @@ BOARD_COLS = 8
 
 # represents states (boards) in Connect 4 game 
 class State():
-    def _init_(self, p1, p2):
+    def __init__(self, p1, p2):
 
         # initial state of board 
         self.board = np.array([[0, 0, 0, 0, 0, 0, 0, 0],
@@ -45,6 +45,8 @@ class State():
     # and 0 if no winner yet
     def winner(self):
 
+        draw = True
+
         for row in range(BOARD_ROWS):
             for col in range(BOARD_COLS):
 
@@ -53,7 +55,7 @@ class State():
 
                 # only check non-empty spaces
                 if loc != 0:
-                    
+
                     # check horizontal consecutive
                     if col + 3 < BOARD_COLS and \
                         loc == self.board[row][col+1] == self.board[row][col+2] == self.board[row][col+3]:
@@ -73,8 +75,11 @@ class State():
                     if row - 3 >= 0 and col + 3 < BOARD_COLS and \
                        loc == self.board[row-1][col+1] == self.board[row-2][col+2] == self.board[row-3][col+3]:
                         return loc
+                
+                else:
+                    draw = False
                     
-        return 0
+        return 0 if not draw else -1
                 
     # updates the board by performing the action
     # action is a tuple where the first num is Player #
@@ -108,13 +113,13 @@ class State():
 
     # gives rewards to Players from the action that was just made
     def giveReward(self):
-
+    
         result = self.winner()
 
         if result == 1:
             self.p1.feedReward(1)
             self.p2.feedReward(0)
-        elif result == -1:
+        elif result == 2:
             self.p1.feedReward(0)
             self.p2.feedReward(1)
         else:
@@ -124,19 +129,22 @@ class State():
     # two AI bots play against each other for training purposes
     def play(self, num_eps = 1000):
         for i in range(num_eps):
-            if i % 100 == 0:
-                print("Rounds {}".format(i))
+
             while not self.isEnd:
                 # player 1
-                positions = self.getAvailablePositions()
+                positions = self.getAvailablePositions(1)
                 p1_action = self.p1.chooseAction(positions, self.board)
                 self.updateState(p1_action)
                 board_hash = self.getHash()
 
                 # check for end state
                 win = self.winner()
-                if win is not None:
+                if win != 0:
                     # self.showBoard()
+
+                    if i % 100 == 0:
+                        print("Rounds {}".format(i))
+                        print(self.board)
 
                     self.giveReward()
                     self.p1.reset()
@@ -145,15 +153,19 @@ class State():
                     break
 
                 else:
-                    pos = self.getAvailablePositions()
+                    pos = self.getAvailablePositions(2)
                     p2_action = self.p2.chooseAction(pos, self.board)
                     self.updateState(p2_action)
                     board_hash = self.getHash()
-                    self.p2.addState(board_hash)
+                    self.p2.addStates(board_hash)
 
                     win = self.winner()
-                    if win is not None:
+                    if win != 0:
                         # self.showBoard()
+
+                        if i % 100 == 0:
+                            print("Rounds {}".format(i))
+                            print(self.board)
 
                         self.giveReward()
                         self.p1.reset()
@@ -161,8 +173,6 @@ class State():
                         self.reset()
                         break
 
-                # action and update
-                self.updateState()
 
     def printBoard(self):
         print(self.board)

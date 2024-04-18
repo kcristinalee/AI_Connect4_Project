@@ -45,6 +45,7 @@ class Player():
         # exploitation
         else:
             value_max = -999
+
             for a in actions:
                 player, col = a
                 
