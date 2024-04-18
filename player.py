@@ -44,7 +44,8 @@ class Player():
         # exploration version
         if random.random() < self.exp_rate:
             action = random.choice(actions)
-            
+
+        # exploitation
         else:
             value_max = -999
             for a in actions:
@@ -66,7 +67,6 @@ class Player():
                     action = a
         
         return action
-
 
     def addStates(self, board_hash):
         self.states.append(board_hash)
