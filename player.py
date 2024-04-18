@@ -48,10 +48,18 @@ class Player():
         self.states.append(board_hash)
 
     def feedReward(self, reward):
-        pass
+        # Loop through the states the player went through
+        for curr in reversed(self.states):
+            # Initializes state value if not encountered before
+            if self.states_value.get(curr) is None:
+                self.states_value[curr] = 0
+            # Use value iteration formula
+            self.states_value[curr] += self.learning_rate * (self.decay_gamma * reward - self.states_value[curr])
+            # Updates reward for next iteration
+            reward = self.states_value[curr]
 
     def reset(self):
-        pass
+        self.states = []
 
     # Using pickle module to save and load policies
     def savePolicy(self):
