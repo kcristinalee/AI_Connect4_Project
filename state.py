@@ -108,12 +108,61 @@ class State():
 
     # gives rewards to Players from the action that was just made
     def giveReward(self, events):
-        pass
+
+        result = self.winner()
+
+        if result == 1:
+            self.p1.feedReward(1)
+            self.p2.feedReward(0)
+        elif result == -1:
+            self.p1.feedReward(0)
+            self.p2.feedReward(1)
+        else:
+            self.p1.feedReward(0.5)
+            self.p2.feedReward(0.5)
 
     # two AI bots play against each other for training purposes
-    def play(self, num_eps = 100):
-        pass
+    def play(self, num_eps = 1000):
+        for i in range(num_eps):
+            if i % 100 == 0
+                print("Rounds {}".format(i))
+            while not self.isEnd:
+                # player 1
+                positions = self.availablePositions()
+                p1_action = self.p1.chooseAction(positions, self.board)
+                self.updateState(p1_action)
+                board_hash = self.getHash()
 
+                # check for end state
+                win = self.winner()
+                if win is not None:
+                    # self.showBoard()
+
+                    self.giveReward()
+                    self.p1.reset()
+                    self.p2.reset()
+                    self.reset()
+                    break
+
+                else:
+                    pos = self.availablePositions()
+                    p2_action = self.p2.chooseAction(pos, self.board)
+                    self.updateState(p2_action)
+                    board_hash = self.getHash()
+                    self.p2.addState(board_hash)
+
+                    win = self.winner()
+                    if win is not None:
+                        # self.showBoard()
+
+                        self.giveReward()
+                        self.p1.reset()
+                        self.p2.reset()
+                        self.reset()
+                        break
+
+                # action and update
+                self.updateState(
 
     def printBoard(self):
         print(self.board)
