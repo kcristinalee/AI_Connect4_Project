@@ -1,3 +1,6 @@
+from state import State
+from player import Player
+
 p1 = Player("p1")
 p2 = Player("p2")
 
