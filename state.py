@@ -111,21 +111,81 @@ class State():
         self.isEnd = False
         self.boardHash = None
 
-    # gives rewards to Players from the action that was just made
-    def giveReward(self):
+   # gives rewards to Players from the action that was just made
+    def giveReward(self, action):
     
         result = self.winner()
 
+        player_num, col = action        
+
+        # player 1 won
         if result == 1:
             self.p1.feedReward(1)
             self.p2.feedReward(0)
+        # player 2 won
         elif result == 2:
             self.p1.feedReward(0)
             self.p2.feedReward(1)
         else:
-            self.p1.feedReward(0.5)
-            self.p2.feedReward(0.5)
+            # check for consecutive moves
+            consecutive_moves = self.checkConsecutives(action)
+            if consecutive_moves > 0:
+                # feed reward to player that just moved
+                if player_num == 1:
+                    self.p1.feedReward(0.1 * consecutive_moves)
+                    self.p2.feedReward(0)
+                else:
+                    self.p1.feedReward(0)
+                    self.p2.feedReward(0.1 * consecutive_moves) 
 
+        # if there is a tie then the Player that made more consecutives will win
+
+
+    # check how many consecutive the action made
+    def checkConsecutives(self, action):
+        player, col = action
+        row = len(self.board) - 1  # start checking from the bottom row
+        consecutives = 0
+        
+        # check vertically
+        while row >= 0 and self.board[row][col] == player:
+            consecutives += 1
+            row -= 1
+        
+        # check horizontally
+        row = len(self.board) - 1  # reset row to bottom
+        for c in range(col - 1, max(col - 4, -1), -1):
+            if self.board[row][c] == player:
+                consecutives += 1
+            else:
+                break
+        
+        for c in range(col + 1, min(col + 4, len(self.board[0]))):
+            if self.board[row][c] == player:
+                consecutives += 1
+            else:
+                break
+        
+        # check diagonally (down-right and down-left)
+        directions = [(1, 1), (1, -1)]
+        for dx, dy in directions:
+            count = 1  # count the initial move
+            r, c = row + dx, col + dy
+            while 0 <= r < len(self.board) and 0 <= c < len(self.board[0]) and self.board[r][c] == player:
+                count += 1
+                r += dx
+                c += dy
+            
+            r, c = row - dx, col - dy
+            while 0 <= r < len(self.board) and 0 <= c < len(self.board[0]) and self.board[r][c] == player:
+                count += 1
+                r -= dx
+                c -= dy
+            
+            consecutives = max(consecutives, count)
+        
+        return consecutives
+        
     # two AI bots play against each other for training purposes
     def play(self, num_eps = 1000):
         for i in range(num_eps):
@@ -146,7 +206,7 @@ class State():
                         print("Rounds {}".format(i))
                         print(self.board)
 
-                    self.giveReward()
+                    self.giveReward(p1_action)
                     self.p1.reset()
                     self.p2.reset()
                     self.reset()
@@ -167,7 +227,7 @@ class State():
                             print("Rounds {}".format(i))
                             print(self.board)
 
-                        self.giveReward()
+                        self.giveReward(p2_action)
                         self.p1.reset()
                         self.p2.reset()
                         self.reset()
