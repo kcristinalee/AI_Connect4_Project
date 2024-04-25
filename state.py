@@ -27,15 +27,18 @@ class State():
         self.boardHash = str(self.board.reshape(BOARD_COLS * BOARD_ROWS))
         return self.boardHash   
     
+    
+    # changed this to not have the p argument - don't think it's necessary?
+
     # returns a list of the available cols that Player can drop a piece in
-    def getAvailablePositions(self, p):
+    def getAvailablePositions(self):
 
         availCols = []
         
         # just have to check the first row if the col is open
         for col in range(BOARD_COLS):
             if self.board[0][col] == 0:
-                availCols.append((p, col))
+                availCols.append(col)
         
         return availCols
 
