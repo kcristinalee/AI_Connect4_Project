@@ -27,7 +27,7 @@ class State():
         self.boardHash = str(self.board.reshape(BOARD_COLS * BOARD_ROWS))
         return self.boardHash   
     
-    
+
     # changed this to not have the p argument - don't think it's necessary?
 
     # returns a list of the available cols that Player can drop a piece in
@@ -199,6 +199,8 @@ class State():
                 p1_action = self.p1.chooseAction(positions, self.board)
                 self.updateState(p1_action)
                 board_hash = self.getHash()
+                self.p1.addStates(board_hash)
+
 
                 # check for end state
                 win = self.winner()

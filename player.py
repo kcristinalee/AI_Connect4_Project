@@ -10,7 +10,7 @@ BOARD_COLS = 8
 
 class Player():
 
-    def __init__(self, name, exp_rate=0.3):
+    def __init__(self, name, exp_rate=0.4):
          
         self.name = name
 
@@ -26,7 +26,7 @@ class Player():
         self.exp_rate = exp_rate
 
         # discount factor ( to do living reward)
-        self.decay_gamma = 0.9
+        self.decay_gamma = 0.99
 
         # dict to update the corresponding state -> val
         self.states_value = {}
@@ -44,7 +44,9 @@ class Player():
 
         # exploitation
         else:
+            # print(actions)
             value_max = -999
+            random.shuffle(actions)
 
             for a in actions:
                 player, col = a
@@ -57,12 +59,14 @@ class Player():
                         break
 
                 next_hash = self.getHash(next_board)
+                # print(self.states_value[])
 
                 value = 0 if self.states_value.get(next_hash) is None else self.states_value.get(next_hash)
 
-                if value > value_max:
+                if value >= value_max:
                     value_max = value
                     action = a
+            # print(action)
         
         return action
 

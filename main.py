@@ -11,4 +11,7 @@ st.play()
 
 p1.savePolicy()
 
+print(p1.states_value)
+print(p2.states_value)
+
 
