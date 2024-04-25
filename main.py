@@ -9,4 +9,6 @@ print("training...")
 
 st.play()
 
+p1.savePolicy()
+
 

@@ -31,15 +31,15 @@ class State():
     # changed this to not have the p argument - don't think it's necessary?
 
     # returns a list of the available cols that Player can drop a piece in
-    def getAvailablePositions(self):
+    def getAvailablePositions(self, p):
 
         availCols = []
-        
+
         # just have to check the first row if the col is open
         for col in range(BOARD_COLS):
             if self.board[0][col] == 0:
-                availCols.append(col)
-        
+                availCols.append((p, col))
+
         return availCols
 
 
@@ -236,6 +236,32 @@ class State():
                         self.reset()
                         break
 
+    def playHuman(self):
+        while not self.isEnd:
+            print(self.board)
+
+            # player 1
+            positions = self.getAvailablePositions(1)
+            p1_action = self.p1.chooseAction(positions, self.board)
+            self.updateState(p1_action)
+
+            # check for end state
+            win = self.winner()
+            if win != 0:
+                print(f'Player {win} won the game!')
+                break
+
+            else:
+                pos = self.getAvailablePositions(2)
+                p2_action = self.p2.chooseAction(pos, self.board)
+                self.updateState(p2_action)
+                board_hash = self.getHash()
+                self.p2.addStates(board_hash)
+
+                win = self.winner()
+                if win != 0:
+                    print(f'Player {win} won the game!')
+                    break
 
     def printBoard(self):
         print(self.board)

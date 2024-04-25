@@ -10,7 +10,7 @@ BOARD_COLS = 8
 
 class Player():
 
-    def __init__(self, name):
+    def __init__(self, name, exp_rate=0.3):
          
         self.name = name
 
@@ -23,7 +23,7 @@ class Player():
         # we will be doing e-greedy
         # where 70% of the time, exploit: agent will take the greedy action (curr estimation of state-vals)
         # and the other 30%, explore: agent will take a random action
-        self.exp_rate = 0.3
+        self.exp_rate = exp_rate
 
         # discount factor ( to do living reward)
         self.decay_gamma = 0.9
