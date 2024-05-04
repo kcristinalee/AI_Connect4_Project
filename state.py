@@ -1,5 +1,6 @@
 import numpy as np
 
+# Global variables for board dimensions
 BOARD_ROWS = 7
 BOARD_COLS = 8
 
@@ -23,12 +24,10 @@ class State():
 
         self.boardHash = None
 
+    # Gets hash for current state
     def getHash(self):
         self.boardHash = str(self.board.reshape(BOARD_COLS * BOARD_ROWS))
         return self.boardHash   
-    
-
-    # changed this to not have the p argument - don't think it's necessary?
 
     # returns a list of the available cols that Player can drop a piece in
     def getAvailablePositions(self, p):

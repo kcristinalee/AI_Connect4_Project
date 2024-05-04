@@ -5,9 +5,11 @@ import copy
 
 from state import State
 
+# Global variables for board dimensions
 BOARD_ROWS = 7
 BOARD_COLS = 8
 
+# Defines agent
 class Player():
 
     def __init__(self, name, exp_rate=0.4):
@@ -31,6 +33,7 @@ class Player():
         # dict to update the corresponding state -> val
         self.states_value = {}
 
+    # Returns board hash
     def getHash(self, board):
         return str(board.reshape(BOARD_COLS * BOARD_ROWS))
     
@@ -38,41 +41,42 @@ class Player():
     # and the board
     def chooseAction(self, actions, board):
 
-        # exploration version
+        # exploration: takes random action
         if random.random() < self.exp_rate:
             action = random.choice(actions)
 
-        # exploitation
+        # exploitation: chooses best known action
         else:
-            # print(actions)
             value_max = -999
             random.shuffle(actions)
 
             for a in actions:
+                # Retreiving current action
                 player, col = a
                 
+                # Looking ahead 1 step using action a
                 next_board = board.copy()
-
                 for row in range(BOARD_ROWS-1, -1, -1):
                     if next_board[row][col] == 0:
                         next_board[row][col] = player
                         break
-
                 next_hash = self.getHash(next_board)
-                # print(self.states_value[])
 
+                # Computing the value of the current action
                 value = 0 if self.states_value.get(next_hash) is None else self.states_value.get(next_hash)
 
+                # Determining if the current action is the best action
                 if value >= value_max:
                     value_max = value
                     action = a
-            # print(action)
-        
+
         return action
 
+    # Adds a board hash to the states variable
     def addStates(self, board_hash):
         self.states.append(board_hash)
 
+    # Backpropigates rewards after game
     def feedReward(self, reward):
         
         # Loop through the states the player went through
@@ -88,6 +92,7 @@ class Player():
             # Updates reward for next iteration
             reward = self.states_value[curr]
 
+    # Resets player
     def reset(self):
         self.states = []
 

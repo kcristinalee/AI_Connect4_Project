@@ -47,6 +47,7 @@ def column_button_click(column_index):
 
     print(column_index)
 
+# Button action to toggle fullscreen
 def toggle_fullscreen():
     if root.attributes('-fullscreen'):
         root.attributes('-fullscreen', False)
@@ -55,6 +56,7 @@ def toggle_fullscreen():
         root.attributes('-fullscreen', True)
         fullscreen_button.config(text="Fullscreen Off")
 
+# Sets style for column buttons
 col_button_style = {
     "bg": "#D5DF73",        # Background color
     "fg": "#2D3047",        # Foreground (text) color
@@ -70,6 +72,7 @@ col_button_style = {
     "cursor": "hand2"       # Cursor appearance
 }
 
+# Sets style for start button
 start_button_style = {
     "bg": "#2D3047",        # Background color
     "fg": "#F4F3EE",        # Foreground (text) color
@@ -83,6 +86,7 @@ start_button_style = {
     "cursor": "hand2"       # Cursor appearance
 }
 
+# Sets style for fullscreen button
 screen_button_style = {
     "bg": "#2D3047",        # Background color
     "fg": "#F4F3EE",        # Foreground (text) color

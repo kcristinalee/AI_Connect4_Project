@@ -2,6 +2,7 @@ import numpy as np
 import tensorflow as tf
 import random
 
+# Defining game parameters
 ROWS = 8
 COLUMNS = 8
 EMPTY = 0
