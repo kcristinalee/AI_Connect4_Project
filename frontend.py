@@ -1,51 +1,116 @@
 import tkinter as tk
 
+from state import State
+from player import Player
+from human import HumanPlayer
+
+state = None
+column_buttons = []
+board_circles = []
+
 def start_new_game():
+    # Retreiving global vars
+    global column_buttons
+    global board_circles
+
     # Clear out board
-    board_circles = []
     for row in range(7):
         for col in range(8):
-            circle = tk.Canvas(board_frame, width = 60, height = 60, bg = "#2D3047", highlightthickness = 0)
-            circle.create_oval(5, 5, 55, 55, outline = "#F4F3EE", fill = "#F4F3EE", width = 2)
-            circle.grid(row = row+1, column = col, padx = 3, pady = 3)
-            board_circles.append(circle)
-    
-    # TODO: Reset game on backend
+            board_circles[row * 8 + col].itemconfig("oval", fill = "#F4F3EE")
 
-    print("New Game Button Pressed")
+    # Column buttons
+    column_buttons = []
+    for i in range(8):
+        column_button = tk.Button(board_frame, text=f"Play Here", command=lambda i=i: column_button_click(i), **col_button_style)
+        column_button.grid(row=0, column=i, padx=10)
+        column_buttons.append(column_button)
+
+    # Specifying policy
+    policy = 'policy_p1'
+
+    # Creating players
+    p1 = HumanPlayer('human')
+    p2 = Player('ai', exp_rate=0)
+
+    # Loading policy
+    p2.loadPolicy(policy)
+
+    # Creating game state
+    global state
+    state = State(p1, p2)
+
+    # Changing play labels
+    play_left_label.config(text="Play!")
+    play_right_label.config(text="Play!")
 
 def column_button_click(column_index):
-    # TODO: Feed column_index to backend
+    # Retreiving global vars
+    global state
+    global column_buttons
+    global board_circles
 
-    # TODO: Retreive current board after AI plays
-    #current_board_state = function to backend
+    # player 1
+    p1_action = state.p1.chooseActionF(column_index, state.board)
+    state.updateState(p1_action)
+
+    # check for end state
+    win = state.winner()
+    if win == 1:
+        # Remove all col buttons
+        for button in column_buttons:
+            button.destroy()
+        # Changing play labels
+        play_left_label.config(text="You win!\nPress \"Start New Game\"\nto start a new game")
+        play_right_label.config(text="You win!\nPress \"Start New Game\"\nto start a new game")
+    elif win == 2:
+        # Remove all col buttons
+        for button in column_buttons:
+            button.destroy()
+        # Changing play labels
+        play_left_label.config(text="AI wins!\nPress \"Start New Game\"\nto start a new game")
+        play_right_label.config(text="AI wins!\nPress \"Start New Game\"\nto start a new game")
+    else:
+        pos = state.getAvailablePositions(2)
+        p2_action = state.p2.chooseAction(pos, state.board)
+        state.updateState(p2_action)
+        board_hash = state.getHash()
+        state.p2.addStates(board_hash)
+
+        win = state.winner()
+        if win == 1:
+            # Remove all col buttons
+            for button in column_buttons:
+                button.destroy()
+            # Changing play labels
+            play_left_label.config(text="You win!\nPress \"Start New Game\" to start a new game")
+            play_right_label.config(text="You win!\nPress \"Start New Game\" to start a new game")
+        elif win == 2:
+            # Remove all col buttons
+            for button in column_buttons:
+                button.destroy()
+            # Changing play labels
+            play_left_label.config(text="AI wins!\nPress \"Start New Game\" to start a new game")
+            play_right_label.config(text="AI wins!\nPress \"Start New Game\" to start a new game")
+
+    current_board_state = state.board
+    print(current_board_state)
 
     # Display current board
-    #for row in range(7):
-    #    for col in range(8):
-    #        # Update the color of the circles based on the current board state
-    #        if current_board_state[row][col] = =  0:
-    #            # Empty space
-    #            board_circles[row * 7 + col].configure(bg = "F4F3EE")
-    #        elif current_board_state[row][col] = =  1:
-    #            # Player 1's piece
-    #            board_circles[row * 7 + col].configure(bg = "ED217C")
-    #        elif current_board_state[row][col] = =  2:
-    #            # AI's piece
-    #            board_circles[row * 7 + col].configure(bg = "1B998B")
-
-    # TODO: Check for win state (fetch from backend)
-    # If won, remove all col buttons and display winner
-    #for button in column_buttons:
-    #    button.grid_remove()
+    for row in range(7):
+        for col in range(8):
+            # Update the color of the circles based on the current board state
+            if current_board_state[row][col] == 1:
+                # Player 1's piece
+                board_circles[row * 8 + col].itemconfig("oval", fill = "#ED217C")
+            elif current_board_state[row][col] == 2:
+                # AI's piece
+                board_circles[row * 8 + col].itemconfig("oval", fill = "#1B998B")
 
     # Remove col buttons when cols are full
-    #for col in range(8):
-    #    if all(row ! =  0 for row in current_board_state[:, col]):
-    #        # Column is full, hide the corresponding button
-    #        column_buttons[column_index].grid_remove()
-
-    print(column_index)
+    for col in range(len(current_board_state[0])):
+        column_values = [row[col] for row in current_board_state]
+        if all(value != 0 for value in column_values):
+            column_buttons[col].destroy()
 
 # Sets style for column buttons
 col_button_style = {
@@ -79,6 +144,9 @@ start_button_style = {
 root = tk.Tk()
 root.title("Connect4")
 
+# Maximize the window
+root.state('zoomed')
+
 # Add background elements
 top_frame = tk.Frame(root, bg = "#D5DF73", width = 293, height = 813)
 top_frame.pack(side = "top", fill = "both", expand = True)
@@ -111,22 +179,21 @@ start_game_button.pack(pady = (5, 5))
 board_frame = tk.Frame(bottom_frame, width = 586, height = 813, bg = "#2D3047")
 board_frame.pack(pady = (10, 10))
 
-# Column buttons
-column_buttons = []
-for i in range(8):
-    column_button = tk.Button(board_frame, text = f"Play Here", command = lambda i = i: column_button_click(i), **col_button_style)
-    column_button.grid(row = 0, column = i, padx = 10)
-    column_buttons.append(column_button)
+# Add text labels to play
+play_left_label = tk.Label(bottom_frame, text = "Press \"Start New Game\" \nbutton to start", font = ("Roboto", 16), bg = "#F4F3EE", fg = "#2D3047")
+play_left_label.place(relx = 0.15, rely = 0.5, anchor = "center")
+
+play_right_label = tk.Label(bottom_frame, text = "Press \"Start New Game\" \nbutton to start", font = ("Roboto", 16), bg = "#F4F3EE", fg = "#2D3047")
+play_right_label.place(relx = 0.85, rely = 0.5, anchor = "center")
 
 # Add circles for empty spaces on the board
 board_circles = []
 for row in range(7):
     for col in range(8):
         circle = tk.Canvas(board_frame, width = 50, height = 50, bg = "#2D3047", highlightthickness = 0)
-        circle.create_oval(5, 5, 45, 45, outline = "#F4F3EE", fill = "#F4F3EE", width = 2)
+        circle.create_oval(5, 5, 45, 45, outline = "#F4F3EE", fill = "#F4F3EE", width = 2, tags="oval")
         circle.grid(row = row+1, column = col, padx = 3, pady = 3)
         board_circles.append(circle)
 
 # Run the application
 root.mainloop()
-

@@ -20,6 +20,10 @@ class HumanPlayer:
                 # Printing error message
                 print('Try again')
 
+    # Alternate version for choose action that uses the frontend
+    def chooseActionF(self, col, board):
+        return self.player_num, col
+
     # Passing functions
     def addState(self, state):
         pass
