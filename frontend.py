@@ -60,15 +60,15 @@ def column_button_click(column_index):
         for button in column_buttons:
             button.destroy()
         # Changing play labels
-        play_left_label.config(text="You win!\nPress \"Start New Game\"\nto start a new game")
-        play_right_label.config(text="You win!\nPress \"Start New Game\"\nto start a new game")
+        play_left_label.config(text = "You win!\nPress \"Start New Game\"\nto start a new game")
+        play_right_label.config(text = "You win!\nPress \"Start New Game\"\nto start a new game")
     elif win == 2:
         # Remove all col buttons
         for button in column_buttons:
             button.destroy()
         # Changing play labels
-        play_left_label.config(text="AI wins!\nPress \"Start New Game\"\nto start a new game")
-        play_right_label.config(text="AI wins!\nPress \"Start New Game\"\nto start a new game")
+        play_left_label.config(text = "AI wins!\nPress \"Start New Game\"\nto start a new game")
+        play_right_label.config(text = "AI wins!\nPress \"Start New Game\"\nto start a new game")
     else:
         pos = state.getAvailablePositions(2)
         p2_action = state.p2.chooseAction(pos, state.board)
@@ -82,18 +82,17 @@ def column_button_click(column_index):
             for button in column_buttons:
                 button.destroy()
             # Changing play labels
-            play_left_label.config(text="You win!\nPress \"Start New Game\" to start a new game")
-            play_right_label.config(text="You win!\nPress \"Start New Game\" to start a new game")
+            play_left_label.config(text = "You win!\nPress \"Start New Game\"\nto start a new game")
+            play_right_label.config(text = "You win!\nPress \"Start New Game\"\nto start a new game")
         elif win == 2:
             # Remove all col buttons
             for button in column_buttons:
                 button.destroy()
             # Changing play labels
-            play_left_label.config(text="AI wins!\nPress \"Start New Game\" to start a new game")
-            play_right_label.config(text="AI wins!\nPress \"Start New Game\" to start a new game")
+            play_left_label.config(text = "AI wins!\nPress \"Start New Game\"\nto start a new game")
+            play_right_label.config(text = "AI wins!\nPress \"Start New Game\"\nto start a new game")
 
     current_board_state = state.board
-    print(current_board_state)
 
     # Display current board
     for row in range(7):
@@ -167,6 +166,7 @@ how_to_play_text = (
     "- The line can be horizontal, vertical, or diagonal\n"
     "- Click on a column with a green indicator to drop one of your pieces in that column\n"
     "- After you drop a piece, the AI will take a turn as well"
+    "- Your peices are aqua, the AI's peices are pink"
 )
 how_to_play_content = tk.Label(top_frame, text = how_to_play_text, font = ("Roboto", 12), justify = "left", bg = "#D5DF73", fg = "#2D3047")
 how_to_play_content.pack(pady = (0, 0))
