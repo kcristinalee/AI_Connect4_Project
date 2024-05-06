@@ -13,7 +13,7 @@ To play on your own device...
 Put poster (image or pdf) here
 
 ## Collaborator Contact Information
-Kaan Aydogan: 
-Christina Lee: 
-Wren Poremba: [Linkedin](https://www.linkedin.com/in/wrenporemba/)
-Elena Rangelov: 
+- Kaan Aydogan:
+- Christina Lee:
+- Wren Poremba: [Linkedin](https://www.linkedin.com/in/wrenporemba/)
+- Elena Rangelov: 
