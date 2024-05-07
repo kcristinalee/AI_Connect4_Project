@@ -86,10 +86,6 @@ def column_button_click(column_index):
         p2_action = dql.chooseActionDeep(pos, state.board)
         state.updateState(p2_action)
 
-        # p2_action = state.p2.chooseAction(pos, state.board)
-        # board_hash = state.getHash()
-        # state.p2.addStates(board_hash)
-
         win = state.winner()
         if win == 1:
             # Remove all col buttons
@@ -114,10 +110,10 @@ def column_button_click(column_index):
             # Update the color of the circles based on the current board state
             if current_board_state[row][col] == 1:
                 # Player 1's piece
-                board_circles[row * 8 + col].itemconfig("oval", fill = "#ED217C")
+                board_circles[row * 8 + col].itemconfig("oval", fill = "#ED217C", outline = "#ED217C")
             elif current_board_state[row][col] == 2:
                 # AI's piece
-                board_circles[row * 8 + col].itemconfig("oval", fill = "#1B998B")
+                board_circles[row * 8 + col].itemconfig("oval", fill = "#1B998B", outline = "#1B998B")
 
     # Remove col buttons when cols are full
     for col in range(len(current_board_state[0])):
