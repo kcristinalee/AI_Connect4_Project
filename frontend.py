@@ -3,6 +3,7 @@ import tkinter as tk
 from state import State
 from player import Player
 from human import HumanPlayer
+import numpy as np
 
 from dql import DQL
 
@@ -42,7 +43,13 @@ def start_new_game():
 
     # Creating game state
     global state
-    state = State(p1, p2)
+    state = State(p1, p2, np.array([[0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0]]))
 
     # Changing play labels
     play_left_label.config(text="Play!")

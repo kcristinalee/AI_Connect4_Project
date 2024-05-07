@@ -1,6 +1,10 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from state import State
+
+BOARD_ROWS = 7
+BOARD_COLS = 8
 
 
 class DQL:
@@ -13,11 +17,40 @@ class DQL:
     def chooseActionDeep(self, actions, board):
         valmax = -9999
         action = None
+
         for a in actions:
             player, col = a
 
             next_board = board.copy()
-            for row in range(6, -1, -1):
+            for row in range(BOARD_ROWS - 1, -1, -1):
+                    if next_board[row][col] == 0:
+                        next_board[row][col] = player
+                        temp_state = State(1, 2, next_board)
+                        if temp_state.winner() != 0:
+                            return a
+                        break
+
+        for a in actions:
+            player, col = a
+            if player == 1:
+                opp = 2
+            else:
+                opp = 1
+
+            next_board = board.copy()
+            for row in range(BOARD_ROWS - 1, -1, -1):
+                if next_board[row][col] == 0:
+                    next_board[row][col] = opp
+                    temp_state = State(1, 2, next_board)
+                    if temp_state.winner() != 0:
+                        return a
+                    break
+
+        for a in actions:
+            player, col = a
+
+            next_board = board.copy()
+            for row in range(BOARD_ROWS - 1, -1, -1):
                 if next_board[row][col] == 0:
                     next_board[row][col] = player
                     break
