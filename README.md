@@ -6,6 +6,7 @@ This project was completed as a final project for the University of Maryland's C
 To play on your own device...
 - Download the code onto your device
 - Open in your favorite code editor
+- You may have to pip install torch
 - In the command line, type "python frontend.py"
 - The UI will pop up in a separate window
 
