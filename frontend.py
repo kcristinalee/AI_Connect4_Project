@@ -11,7 +11,7 @@ state = None
 column_buttons = []
 board_circles = []
 
-dql = DQL('model.pt')
+dql = DQL('model1.pt')
 
 
 def start_new_game():

@@ -11,7 +11,7 @@ class DQL:
 
     def __init__(self, model_path):
         self.model = _DQLNet()
-        self.model.load_state_dict(torch.load(model_path))
+        self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
         self.model.eval()
 
     def chooseActionDeep(self, actions, board):
