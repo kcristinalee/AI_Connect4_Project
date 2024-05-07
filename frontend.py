@@ -22,7 +22,7 @@ def start_new_game():
     # Clear out board
     for row in range(7):
         for col in range(8):
-            board_circles[row * 8 + col].itemconfig("oval", fill = "#F4F3EE")
+            board_circles[row * 8 + col].itemconfig("oval", fill = "#F4F3EE", outline='')
 
     # Column buttons
     column_buttons = []
