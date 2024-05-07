@@ -4,9 +4,14 @@ from state import State
 from player import Player
 from human import HumanPlayer
 
+from dql import DQL
+
 state = None
 column_buttons = []
 board_circles = []
+
+dql = DQL('model.pt')
+
 
 def start_new_game():
     # Retreiving global vars
@@ -71,10 +76,12 @@ def column_button_click(column_index):
         play_right_label.config(text="AI wins!\nPress \"Start New Game\"\nto start a new game")
     else:
         pos = state.getAvailablePositions(2)
-        p2_action = state.p2.chooseAction(pos, state.board)
+        p2_action = dql.chooseActionDeep(pos, state.board)
         state.updateState(p2_action)
-        board_hash = state.getHash()
-        state.p2.addStates(board_hash)
+
+        # p2_action = state.p2.chooseAction(pos, state.board)
+        # board_hash = state.getHash()
+        # state.p2.addStates(board_hash)
 
         win = state.winner()
         if win == 1:
