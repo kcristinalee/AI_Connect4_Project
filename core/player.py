@@ -10,7 +10,7 @@ BOARD_COLS = 8
 class Player():
 
     def __init__(self, name, exp_rate=0.4):
-         
+
         self.name = name
 
         # records all positions taken for training purposes
@@ -27,75 +27,81 @@ class Player():
         # discount factor ( to do living reward)
         self.decay_gamma = 0.99
 
+        self.exp_rate_decay = 0.999
+
         # dict to update the corresponding state -> val
         self.states_value = {}
 
-    # Returns board hash
     def getHash(self, board):
         return str(board.reshape(BOARD_COLS * BOARD_ROWS))
-    
-    # takes in a list that is returned from getAvailablePositions 
-    # and the board
-    def chooseAction(self, actions, board):
 
-        # exploration: takes random action
-        if random.random() < self.exp_rate:
+    # takes in a list that is returned from getAvailablePositions
+    # and the board
+    def chooseAction(self, actions, board, iteration):
+
+        hash = self.getHash(board)
+
+        exp = (self.exp_rate_decay ** iteration) * self.exp_rate
+
+        # exploration version
+        if random.random() < exp:
             action = random.choice(actions)
 
-        # exploitation: chooses best known action
+        # exploitation
         else:
             value_max = -999
             random.shuffle(actions)
 
             for a in actions:
-                # Retreiving current action
                 player, col = a
-                
-                # Looking ahead 1 step using action a
-                next_board = board.copy()
-                for row in range(BOARD_ROWS-1, -1, -1):
-                    if next_board[row][col] == 0:
-                        next_board[row][col] = player
-                        break
-                next_hash = self.getHash(next_board)
 
-                # Computing the value of the current action
-                value = 0 if self.states_value.get(next_hash) is None else self.states_value.get(next_hash)
+                value = 0 if self.states_value.get(hash) is None else \
+                self.states_value.get(hash)[col]
 
-                # Determining if the current action is the best action
+                # next_board = board.copy()
+
+                # for row in range(BOARD_ROWS-1, -1, -1):
+                #     if next_board[row][col] == 0:
+                #         next_board[row][col] = player
+                #         break
+
+                # next_hash = self.getHash(next_board)
+                # # print(self.states_value[])
+
+                # value = 0 if self.states_value.get(next_hash) is None else self.states_value.get(next_hash)
+
                 if value >= value_max:
                     value_max = value
                     action = a
 
         return action
 
-    # Adds a board hash to the states variable
-    def addStates(self, board_hash):
-        self.states.append(board_hash)
+    def addStates(self, board_hash, action):
+        if board_hash not in self.states:
+            self.states.append((board_hash, action[1]))
 
-    # Backpropigates rewards after game
     def feedReward(self, reward):
-        
-        # Loop through the states the player went through
-        for curr in reversed(self.states):
-            
-            # Initializes state value if not encountered before
-            if self.states_value.get(curr) is None:
-                self.states_value[curr] = 0
-                
-            # Use value iteration formula
-            self.states_value[curr] += self.learning_rate * (self.decay_gamma * reward - self.states_value[curr])
-            
-            # Updates reward for next iteration
-            reward = self.states_value[curr]
 
-    # Resets player
+        # Loop through the states the player went through
+        for st, act in reversed(self.states):
+
+            # Initializes state value if not encountered before
+            if self.states_value.get(st) is None:
+                self.states_value[st] = [0, 0, 0, 0, 0, 0, 0, 0]
+
+            # Use value iteration formula
+            self.states_value[st][act] += self.learning_rate * (
+                        self.decay_gamma * reward - self.states_value[st][act])
+
+            # Updates reward for next iteration
+            reward = self.states_value[st][act]
+
     def reset(self):
         self.states = []
 
     # Using pickle module to save and load policies
     def savePolicy(self):
-        fw = open('policy_' + str(self.name), 'wb')
+        fw = open(str(self.name), 'wb')
         pickle.dump(self.states_value, fw)
         fw.close()
 
