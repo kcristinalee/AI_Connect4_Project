@@ -15,9 +15,6 @@ To play on your own device...
 - `pip install -r requirements.txt`
 - `python frontend.py`
 
-## Poster
-Put poster (image or pdf) here
-
 ## Collaborator Contact Information
 - Kaan Aydogan: N/A
 - Christina Lee: [Linkedin](https://www.linkedin.com/in/christinalee5155/)
