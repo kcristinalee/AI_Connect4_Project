@@ -1,14 +1,19 @@
-# AI_Connect4_Project
-## About
-This project was completed as a final project for the University of Maryland's CMSC421 course (Intro to AI) under the instruction of Max Ehrlich.
+# RL Connect-4 Agent
 
-## How to run on your own device
+## About
+This project was completed as a final project for the University of Maryland's CMSC421 course (Intro to AI) under the instruction of Max Ehrlich. It is a reinforcement learning Connect 4 agent.
+
+## Structure
+- `core`: Contains the core classes and logic for Q-learning.
+- `training`: Contains Q-learning training script and Jupyter Notebook used to train the neural network.
+- human.py: The command line test utility for Q-learning policies.
+- frontend.py: The GUI for the user to play against the final model.
+
+## Instructions
 To play on your own device...
-- Download the code onto your device
-- Open in your favorite code editor
-- You may have to pip install torch
-- In the command line, type "python frontend.py"
-- The UI will pop up in a separate window
+- Clone the repository
+- `pip install -r requirements.txt`
+- `python frontend.py`
 
 ## Poster
 Put poster (image or pdf) here

@@ -1,17 +1,17 @@
 import tkinter as tk
 
-from state import State
-from player import Player
+from core.state import State
+from core.player import Player
 from human import HumanPlayer
 import numpy as np
 
-from dql import DQL
+from core.dql import DQL
 
 state = None
 column_buttons = []
 board_circles = []
 
-dql = DQL('model1.pt')
+dql = DQL('model.pt')
 
 
 def start_new_game():

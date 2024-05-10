@@ -1,5 +1,6 @@
-from state import State
-from player import Player
+from core.state import State
+from core.player import Player
+
 
 class HumanPlayer:
 
