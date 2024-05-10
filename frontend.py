@@ -31,15 +31,10 @@ def start_new_game():
         column_button.grid(row=0, column=i, padx=10)
         column_buttons.append(column_button)
 
-    # Specifying policy
-    policy = 'policy_p1'
 
     # Creating players
     p1 = HumanPlayer('human')
     p2 = Player('ai', exp_rate=0)
-
-    # Loading policy
-    p2.loadPolicy(policy)
 
     # Creating game state
     global state
